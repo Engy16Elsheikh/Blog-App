@@ -40,11 +40,17 @@ const page = () => {
 
           </thead>
           <tbody>
-            {blogs?.length ? (
-              blogs.map((item, index) => (
-                <BlogTableItem key={index} mongoId={item._id} title={item.title}  author={item.author} date={item.date} deleteBlogs={deleteBlogs}/>
-              ))
-            ) : (
+            {{blogs.map((item) => (
+  <BlogTableItem
+    key={item._id}
+    mongoId={item._id}
+    title={item.title}
+    author={item.author}
+    authorImg={item.authorImg}
+    date={item.date}
+    deleteBlog={deleteBlog}
+  />
+))} : (
               <tr>
                 <td colSpan="3" className="text-center py-4">No blogs available</td>
               </tr>
