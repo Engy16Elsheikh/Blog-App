@@ -39,23 +39,25 @@ const page = () => {
             </tr>
 
           </thead>
-          <tbody>
-            {{blogs.map((item) => (
-  <BlogTableItem
-    key={item._id}
-    mongoId={item._id}
-    title={item.title}
-    author={item.author}
-    authorImg={item.authorImg}
-    date={item.date}
-    deleteBlog={deleteBlog}
-  />
-))} : (
-              <tr>
-                <td colSpan="3" className="text-center py-4">No blogs available</td>
-              </tr>
-            )}
-          </tbody>
+         <tbody>
+  {blogs?.length ? (
+    blogs.map((item) => (
+      <BlogTableItem
+        key={item._id}
+        mongoId={item._id}
+        title={item.title}
+        author={item.author}
+        authorImg={item.authorImg}
+        date={item.date}
+        deleteBlog={deleteBlogs}
+      />
+    ))
+  ) : (
+    <tr>
+      <td colSpan="4" className="text-center py-4">No blogs available</td>
+    </tr>
+  )}
+</tbody>
         </table>
       </div>
     </div>
