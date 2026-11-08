@@ -1,34 +1,39 @@
-import React from 'react'
 import Image from 'next/image'
-import { assets } from '../Assets/assets'
 import Link from 'next/link'
-const BlogItem = ({ title, description, category, image,id }) => {
-    return (
-      <div className="max-w-[300px] sm:max-w-[300px] bg-white border border-black hover:shadow-[-7px_7px_0px_#000000]">
-       <Link href={`/blogs/${id}`}>
+
+const BlogItem = ({ id, image, title, description, category }) => {
+  return (
+    <Link
+      href={`/blogs/${id}`}
+      className='group flex flex-col bg-white border border-black overflow-hidden transition-all hover:shadow-[-7px_7px_0px_#000000]'
+    >
+      <div className='relative w-full aspect-[16/10] border-b border-black'>
         <Image
-          src={image} // This will work with the imported "lifeStyle"
-          alt={title || 'Blog Image'} // Use title for better accessibility
-          width={300}
-          height={300}
-          className="border-b border-black"
+          src={image}
+          alt={title}
+          fill
+          sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+          className='object-cover'
         />
-        </Link>
-        <p className="ml-5 mt-5 px-1 inline-block bg-black text-white text-sm">
-          {category}
-        </p>
-        <div className="p-5">
-          <h5 className="mb-2 text-lg font-medium tracking-tight text-gray-900">
-            {title}
-          </h5>
-          <h5 className="mb-3 text-sm font-medium tracking-tight text-gray-700">
-            {description}
-          </h5>
-        <Link href={`/blogs/${id}`} className='inline-flex  items-center py-2 font-semibold text-center'>
-            Read More <Image src={assets.arrow} width={12} alt='' className='ml-2'/>
-        </Link>
       </div>
-    </div>
+
+      <div className='flex flex-col flex-1 p-5'>
+        <span className='self-start bg-black text-white text-xs px-3 py-1 rounded-sm'>
+          {category}
+        </span>
+        <h5 className='mt-4 mb-2 text-lg font-semibold tracking-tight text-gray-900 group-hover:underline line-clamp-2'>
+          {title}
+        </h5>
+        <p
+          className='text-sm text-gray-700 line-clamp-3'
+          dangerouslySetInnerHTML={{ __html: description?.slice(0, 160) }}
+        />
+        <span className='mt-auto pt-4 inline-flex items-center gap-2 text-sm font-semibold'>
+          Read more
+          <Image src='/arrow.png' alt='' width={12} height={12} />
+        </span>
+      </div>
+    </Link>
   )
 }
 

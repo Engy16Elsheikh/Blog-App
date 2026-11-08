@@ -1,34 +1,58 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import BlogItem from './BlogItem'
-import { blog_data } from '@/Assets/assets'
 import axios from 'axios'
 
+const categories = ['All', 'Technology', 'Startup', 'Lifestyle']
+
 const BlogList = () => {
- const [menu,setMenu]=useState("All")
- const [blogs,setBlogs]=useState([])
- const fetchBlogs=async()=>{
-  const response=await axios.get('/api/blog')
-  setBlogs(response.data,blogs)
-  console.log(response.data,blogs)
- }
- useEffect(()=>{
-          fetchBlogs()
- },[])
+  const [menu, setMenu] = useState('All')
+  const [blogs, setBlogs] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    axios.get('/api/blog')
+      .then((res) => setBlogs(Array.isArray(res.data) ? res.data : []))
+      .catch((err) => console.error('Failed to load blogs', err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const filtered = blogs.filter((b) => menu === 'All' || b.category === menu)
+
   return (
     <div>
-      <div className='flex justify-center gap-6 my-10'>
-        <button onClick={()=>setMenu("All")} className={menu==="All"?'bg-black text-white py-1 px-4 rounded-sm':''}>All</button>
-        <button onClick={()=>setMenu("Technology")}className={menu==="Technology"?'bg-black text-white py-1 px-4 rounded-sm':''}>Technology</button>
-        <button onClick={()=>setMenu("Startup")} className={menu==="Startup"?'bg-black text-white py-1 px-4 rounded-sm':''}>Startup</button>
-        <button onClick={()=>setMenu("Lifestyle")} className={menu==="Lifestyle"?'bg-black text-white py-1 px-4 rounded-sm':''}>Lifestyle</button>
+      <div className='flex flex-wrap justify-center gap-3 my-10'>
+        {categories.map((c) => (
+          <button
+            key={c}
+            onClick={() => setMenu(c)}
+            className={`py-1.5 px-5 rounded-full text-sm font-medium transition-colors ${
+              menu === c ? 'bg-black text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {c}
+          </button>
+        ))}
       </div>
-      <div className='flex flex-wrape justify-around gap1 gap-y-10 mb-16 xl:mx-24'>
-         {blogs.filter((item)=>menu==="All"?true:item.category===menu).map((item,index)=>{
-            return <BlogItem key={index} id={item._id} image={item.image} title={item.title} description={item.description} category={item.category}/>
-         }
 
-         )}
-      </div>
+      {loading ? (
+        <p className='text-center text-gray-400 mb-16'>Loading...</p>
+      ) : filtered.length === 0 ? (
+        <p className='text-center text-gray-400 mb-16'>No blogs in this category yet.</p>
+      ) : (
+        <div className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16 px-5 xl:mx-24'>
+          {filtered.map((item) => (
+            <BlogItem
+              key={item._id}
+              id={item._id}
+              image={item.image}
+              title={item.title}
+              description={item.description}
+              category={item.category}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
