@@ -1,18 +1,23 @@
 import React from 'react'
-const SubscriptionTableItem = ({email,mongoId,deleteEmail,date}) => {
-    const emailDate =new Date(date)
+
+const SubscriptionTableItem = ({ email, mongoId, deleteEmail, date }) => {
+  const emailDate = date ? new Date(date).toDateString() : '-'
+
   return (
-     <tr className='bg-white border-b text-left'>
-      <th scope='row' className='px-6 py-4 font-medium text-gray-500 whitespace-wrape'>
-          {email?email:"No Email"}
+    <tr className='bg-white border-b text-left hover:bg-gray-50'>
+      <th scope='row' className='px-6 py-4 font-medium text-gray-700 whitespace-nowrap'>
+        {email || 'No Email'}
       </th>
-      <td className='px-6 py-4 hidden sm:block'>
-          {emailDate.toDateString()}
+      <td className='px-6 py-4 hidden sm:table-cell'>{emailDate}</td>
+      <td className='px-6 py-4'>
+        <button
+          onClick={() => deleteEmail(mongoId)}
+          className='text-red-500 hover:text-red-700 font-medium'
+        >
+          Delete
+        </button>
       </td>
-      <td className='px-6 py-4 cursor-pointer' onClick={()=>deleteEmail(mongoId)}>
-          x
-      </td>
-     </tr>
+    </tr>
   )
 }
 
